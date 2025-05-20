@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resultados de Fútbol</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+  <style>
+    body {
+      background: url('https://images.unsplash.com/photo-1517927033932-b2f5fdf56a14?fit=crop&w=1950&q=80') center/cover fixed;
+    }
+    .overlay {
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      color: white;
+    }
+    .table thead th {
+      background-color: rgba(255,255,255,0.2);
+    }
+    .table tbody tr {
+      background-color: rgba(255,255,255,0.1);
+    }
+    .btn-football {
+      background-color: #1e90ff;
+      border-color: #1e90ff;
+    }
+    .btn-football:hover {
+      background-color: #1c86ee;
+      border-color: #1c86ee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container overlay">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Resultados de Fútbol</h1>
+      <button class="btn btn-football" data-bs-toggle="modal" data-bs-target="#addMatchModal">
+        + Nuevo Partido
+      </button>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <input type="date" id="searchByDate" class="form-control" placeholder="Filtrar por fecha">
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table id="matchesTable" class="table table-borderless text-white">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Equipo A</th>
+            <th>Marcador</th>
+            <th>Equipo B</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filas generadas dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal: Agregar Partido -->
+  <div class="modal fade" id="addMatchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="addMatchForm" class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Partido</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="matchDate" class="form-label">Fecha</label>
+            <input type="date" id="matchDate" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="teamA" class="form-label">Equipo A</label>
+            <input type="text" id="teamA" class="form-control" placeholder="Nombre Equipo A" required>
+          </div>
+          <div class="mb-3 row">
+            <div class="col">
+              <label for="scoreA" class="form-label">Goles Equipo A</label>
+              <input type="number" id="scoreA" class="form-control" min="0" value="0" required>
+            </div>
+            <div class="col">
+              <label for="scoreB" class="form-label">Goles Equipo B</label>
+              <input type="number" id="scoreB" class="form-control" min="0" value="0" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="teamB" class="form-label">Equipo B</label>
+            <input type="text" id="teamB" class="form-control" placeholder="Nombre Equipo B" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-football">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Partido -->
+  <div class="modal fade" id="editMatchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="editMatchForm" class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Partido</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editMatchId">
+          <div class="mb-3">
+            <label for="editDate" class="form-label">Fecha</label>
+            <input type="date" id="editDate" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="editTeamA" class="form-label">Equipo A</label>
+            <input type="text" id="editTeamA" class="form-control" required>
+          </div>
+          <div class="mb-3 row">
+            <div class="col">
+              <label for="editScoreA" class="form-label">Goles Equipo A</label>
+              <input type="number" id="editScoreA" class="form-control" min="0" required>
+            </div>
+            <div class="col">
+              <label for="editScoreB" class="form-label">Goles Equipo B</label>
+              <input type="number" id="editScoreB" class="form-control" min="0" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="editTeamB" class="form-label">Equipo B</label>
+            <input type="text" id="editTeamB" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Actualizar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Inicialización Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { getFirestore }   from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+    import { firebaseConfig } from "./firebaseConfig.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+    window.firebase = { db };
+  </script>
+
+  <!-- Lógica principal -->
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
